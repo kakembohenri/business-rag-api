@@ -25,6 +25,21 @@ jobs:
           install -m 700 -d ~/.ssh
           ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
 
+      - name: Validate deployment configuration
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PATH: ${{ secrets.VPS_PROJECT_PATH }}
+        run: |
+          set -euo pipefail
+
+          test -n "$VPS_HOST"
+          test -n "$VPS_USER"
+          test -n "$VPS_PATH" || {
+            echo "VPS_PROJECT_PATH is empty. Aborting deployment."
+            exit 1
+          }
+          
       - name: Copy code and restart containers
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
