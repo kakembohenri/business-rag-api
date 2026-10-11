@@ -1,0 +1,24 @@
+services:
+  business_rag:
+    build: .
+    ports:
+      - '8500:8000'                       # reachable by other containers only, NOT by the host
+    env_file:
+      - .env
+    environment:                     # these override values from .env
+      - APP_ENV=production
+      - LOG_LEVEL=INFO
+      - REDIS_URL=redis://redis:6379/0   # use the variable name your Settings reads
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    command: ['redis-server', '--maxmemory', '256mb', '--maxmemory-policy', 'allkeys-lru']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
