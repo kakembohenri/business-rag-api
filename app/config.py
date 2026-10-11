@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     canary: str
     cache_ttl_seconds: str
     rate_limit: str
+    host_api_port: int
+    container_api_port: int
+    allowed_origins: str
 
     model_config = SettingsConfigDict(env_file=".env")
 

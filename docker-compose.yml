@@ -2,11 +2,11 @@ services:
   business_rag:
     build: .
     ports:
-      - '8500:8000'                       # reachable by other containers only, NOT by the host
+      - "${HOST_API_PORT}:${CONTAINER_API_PORT}"                      # reachable by other containers only, NOT by the host
     env_file:
       - .env
     environment:                     # these override values from .env
-      - APP_ENV=production
+      - APP_ENV=prod
       - LOG_LEVEL=INFO
       - REDIS_URL=redis://redis:6379/0   # use the variable name your Settings reads
     depends_on:
