@@ -29,7 +29,7 @@ jobs:
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_PATH: ${{ secrets.VPS_PATH }}
+          VPS_PATH: ${{ secrets.VPS_PROJECT_PATH }}
         run: |
           rsync -az --delete \
             --exclude '.github' --exclude '.env' --exclude '.venv' \
