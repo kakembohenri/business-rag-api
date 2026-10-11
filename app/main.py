@@ -23,7 +23,6 @@ security: SecurityPipeline = None
 cache: ResponseCache = None
 agent = None
 history_store= None
-allowed_origins= None
 
 MAX_INPUT_CHARS = 500
 
@@ -37,7 +36,7 @@ def sse(event: str, data: dict) -> str:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global security, cache, agent, history_store, allowed_origins
+    global security, cache, agent, history_store
 
     settings = get_settings()
 
@@ -50,7 +49,6 @@ async def lifespan(app: FastAPI):
     security = SecurityPipeline(canary=settings.canary, max_input_chars=MAX_INPUT_CHARS, mask_pii=False)
     cache = ResponseCache(ttl_seconds=settings.cache_ttl_seconds)
     agent = runnable_chain
-    allowed_origins = settings.allowed_origins
 
     logger.info("All components initialized. Ready to serve requests.")
 
@@ -68,10 +66,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[allowed_origins],   # never "*" in production
+    allow_origins=[origin for origin in get_settings().allowed_origins.split(",")],   # never "*" in production
     allow_methods=["POST", "GET"],
     allow_headers=["Content-Type"],
 )
