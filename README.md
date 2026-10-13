@@ -126,7 +126,6 @@ These filters are a first line of defense, not a guarantee. Keep the index free 
 
 ## Troubleshooting
 
-- **`No module named 'redis.asyncio'`**: a local file named `redis.py` is shadowing the library. Use `redis_client.py`.
 - **Container shows unhealthy**: the image has no `curl`, so the healthcheck must use Python.
 - **`host not found in upstream`**: the service name in `nginx/default.conf` must match the compose service name.
 - **Follow-up questions are not understood**: the `thread_id` changes between messages, or Redis is unreachable. Check `docker compose logs`.
